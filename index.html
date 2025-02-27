@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>拼多多</title>
+    <style>
+        /* ... (之前的 CSS 样式保持不变) ... */
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .avatar-button {
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .header-left .emoji {
+            font-size: 40px; /* 调整为头像图片的大小 */
+        }
+        /* 新增头像图片的样式 */
+        .avatar-button img {
+            width: 40px; /* 设置头像宽度 */
+            height: 40px; /* 设置头像高度 */
+            border-radius: 50%; /* 圆形头像 */
+            object-fit: cover; /* 保持宽高比并裁剪以填充容器 */
+        }
+
+        .header-left .text-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-buttons {
+            display: flex;
+        }
+
+        .header-buttons button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 20px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .header-buttons .return-money {
+            background-color: #28a745;
+            color: white;
+        }
+
+        /* 删除了 .banner 相关的样式 */
+        .order-section {
+            background-color: #fff;
+            margin-top: 10px;
+            padding: 10px;
+        }
+
+        .order-section h2 {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .order-section h2 a {
+            color: #999;
+            text-decoration: none;
+        }
+
+        .order-items {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .order-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .order-item .emoji {
+            font-size: 30px;
+            margin-bottom: 5px;
+        }
+
+        .order-item .icon-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .order-item .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 5px;
+            font-size: 10px;
+        }
+
+        .collection-section,
+        .service-section {
+            background-color: #fff;
+            margin-top: 10px;
+            padding: 10px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        .collection-item,
+        .service-section a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .collection-item .emoji,
+        .service-section a .emoji {
+            font-size: 30px;
+            margin-bottom: 5px;
+        }
+
+        .service-section a {
+            width: 23%;
+        }
+
+        .product-section {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card {
+            display: flex;
+            margin-bottom: 10px;
+            background-color: #fff;
+            padding: 10px;
+            align-items: center;
+        }
+
+        .product-card .emoji {
+            font-size: 60px;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+
+        .product-info {
+            flex: 1;
+        }
+
+        .product-info h3 {
+            margin: 0;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .product-info .price {
+            font-size: 18px;
+            color: #e53935;
+            margin-top: 5px;
+        }
+
+        .product-info .countdown {
+            color: #e53935;
+            margin-top: 5px;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+        }
+
+        .bottom-nav a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #666;
+            font-size: 12px;
+        }
+
+        .bottom-nav a .emoji {
+            font-size: 24px;
+            margin-bottom: 3px;
+        }
+
+        .bottom-nav .active {
+            color: #e53935;
+        }
+
+        #usernameDisplay a {
+            text-decoration: none;
+            color: inherit;
+            /* cursor: pointer;  移除，因为我们用JavaScript处理点击 */
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <button class="avatar-button" onclick="goToUserProfile()">
+                    <img id="avatarImage" src="default-avatar.png" alt="用户头像"> </button>
+                <div class="text-content">
+                    <div id="usernameDisplay">
+                        <a></a>
+                    </div>
+                    <div>
+                        <a href="#">收货地址 ></a>
+                    </div>
+                </div>
+            </div>
+            <div class="header-buttons">
+                <button class="return-money">免单返现 ></button>
+                <button>设置</button>
+            </div>
+        </div>
+        <!-- ... (order-section, collection-section, 等保持不变) ... -->
+        <div class="order-section">
+            <h2>我的订单
+                <a href="#">查看全部 ></a>
+            </h2>
+            <div class="order-items">
+                <a href="#" class="order-item">
+                    <div class="icon-wrapper">
+                        <span class="emoji">💰</span>
+                    </div>
+                    <span>待付款</span>
+                </a>
+                <a href="#" class="order-item">
+                    <div class="icon-wrapper">
+                        <span class="emoji">🤝</span>
+                    </div>
+                    <span>待分享</span>
+                </a>
+                <a href="#" class="order-item">
+                    <div class="icon-wrapper">
+                        <span class="emoji">🚚</span>
+                    </div>
+                    <span>待发货</span>
+                </a>
+                <a href="#" class="order-item">
+                    <div class="icon-wrapper">
+                        <span class="emoji">📦</span>
+                        <span class="badge">1</span>
+                    </div>
+                    <span>待收货</span>
+                </a>
+                <a href="#" class="order-item">
+                    <div class="icon-wrapper">
+                        <span class="emoji">⭐</span>
+                    </div>
+                    <span>评价</span>
+                </a>
+            </div>
+        </div>
+        <!-- ... (collection-section, service-section, product-section, bottom-nav 等保持不变) ... -->
+        <div class="collection-section">
+            <a href="#" class="collection-item">
+                <span class="emoji">🛍️</span>
+                <span>商品收藏</span> </a>
+            <a href="#" class="collection-item">
+                <span class="emoji">👛</span>
+                <span>多多钱包</span> </a>
+            <a href="#" class="collection-item">
+                <span class="emoji">🎫</span>
+                <span>优惠券</span> </a>
+            <a href="#" class="collection-item">
+                <span class="emoji">📜</span>
+                <span>历史浏览</span> </a>
+            <a href="#" class="collection-item">
+                <span class="emoji">↩️</span>
+                <span>退款售后</span> </a>
+        </div>
+        <div class="service-section">
+            <a href="#">
+                <span class="emoji">🎰</span> 现金大转盘</a>
+            <a href="#">
+                <span class="emoji">🚂</span> 火车票</a>
+            <a href="#">
+                <span class="emoji">🧑‍💻</span> 官方客服</a>
+            <a href="#">
+                <span class="emoji">🍎</span> 免费领水果</a>
+        </div>
+        <div class="product-section">
+            <div class="product-card">
+                <span class="emoji">📱</span>
+                <div class="product-info">
+                    <h3>品牌 专卖店[新品上市]O</h3>
+                    <p>正品发票 12期免息</p>
+                    <p class="price">¥1999
+                        <small>店铺好评5.3万+条</small>
+                    </p>
+                </div>
+            </div>
+            <div class="product-card">
+                <span class="emoji">🐢</span>
+                <div class="product-info">
+                    <h3>38节 石矶娘娘【日版】哪</h3>
+                    <p class="countdown">限时5折 00:59:58.1</p>
+                    <p class="price">最后60分钟 ¥6.85</p>
+                </div>
+            </div>
+        </div>
+        <div class="bottom-nav">
+            <a href="#" class="active">
+                <span class="emoji">🏠</span>
+                <span>首页</span> </a>
+            <a href="#">
+                <span class="emoji">▶️</span>
+                <span>多多视频</span> </a>
+            <a href="#">
+                <span class="emoji">🎟️</span>
+                <span>领券</span> </a>
+            <a href="#">
+                <span class="emoji">💬</span>
+                <span>聊天</span> </a>
+            <a href="#">
+                <span class="emoji">👤</span>
+                <span>个人中心</span> </a>
+        </div>
+    </div>
+    <script>
+        async function isLoggedIn() {
+            try {
+                const response = await fetch('/current-user', {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.status === 200) {
+                    const data = await response.json();
+                    return data.user != null;
+                }
+                return false;
+
+            } catch (error) {
+                console.error('检查登录状态失败:', error);
+                return false;
+            }
+        }
+
+        async function getCurrentUser() {
+            try {
+                const response = await fetch('/current-user', {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (response.status === 200) {
+                    const data = await response.json();
+                    return data.user;
+                }
+                return null;
+            } catch (error) {
+                console.error('获取用户信息失败:', error);
+                return null;
+            }
+        }
+
+        // 新增：加载头像的函数
+        async function loadAvatar() {
+            try {
+                const response = await fetch('/user-profile', {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (response.status === 200) {
+                    const data = await response.json();
+                    const avatarImage = document.getElementById('avatarImage');
+                    // 如果用户有头像，则显示；否则显示默认头像
+                    avatarImage.src = data.avatar || 'default-avatar.png';
+                } else {
+                    console.error('获取头像失败:', response.status);
+                }
+            } catch (error) {
+                console.error('加载头像时出错:', error);
+            }
+        }
+
+
+        window.onload = async function () {
+            const usernameDisplayLink = document.getElementById('usernameDisplay').querySelector('a');
+
+            try {
+                const user = await getCurrentUser();
+                if (user) {
+                    usernameDisplayLink.textContent = user.username;
+                   // usernameDisplayLink.href = '#'; //  移除href
+                    //usernameDisplayLink.addEventListener('click', function (event) {
+                      //  event.preventDefault();
+                       // goToUserProfile();
+                   // });
+                } else {
+                    usernameDisplayLink.textContent = '未登录';
+                    usernameDisplayLink.href = 'login.html';
+                }
+
+                // 加载头像
+                await loadAvatar();
+
+            } catch (error) {
+                console.error('加载用户信息失败:', error);
+                usernameDisplayLink.textContent = '未登录';
+                usernameDisplayLink.href = 'login.html';
+            }
+        };
+
+        async function goToUserProfile() {
+            try {
+                const isUserLoggedIn = await isLoggedIn();
+                if (isUserLoggedIn) {
+                    window.location.replace("edit_avatar.html");
+                } else {
+                    alert("请先登录！");
+                    window.location.replace("login.html");
+                }
+            } catch (error) {
+                console.error('跳转失败:', error);
+                alert("发生错误，请重试");
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的资料</title>
+    <style>
+        /* (原有的样式) */
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            /* 保持元素间距 */
+            align-items: center;
+            padding: 10px;
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* 返回按钮样式 */
+        .header .back-button {
+            font-size: 24px;
+            /* 返回按钮更大 */
+            text-decoration: none;
+            /* 移除下划线 */
+            color: #333;
+            /* 深灰色 */
+            margin-right: 10px;
+            /* 按钮与标题之间的间距 */
+        }
+
+        .header h1 {
+            font-size: 18px;
+            margin: 0;
+            flex-grow: 1;
+            /* 允许标题占据可用空间 */
+            text-align: center;
+            /* 标题居中 */
+        }
+
+        .profile-section {
+            background-color: #fff;
+            margin-top: 10px;
+            padding: 0;
+            /* 移除内边距，使用列表项内边距 */
+        }
+
+        .profile-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            cursor: pointer;
+            /* 更改光标为指针 */
+        }
+
+        .profile-item:last-child {
+            border-bottom: none;
+            /* 移除最后一项的边框 */
+        }
+
+        .profile-item .label {
+            font-weight: bold;
+        }
+
+        .profile-item .value {
+            color: #666;
+        }
+
+        .profile-item .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .profile-item .arrow {
+            font-size: 20px;
+            /* 更大的箭头 */
+            color: #999;
+            /* 浅灰色箭头 */
+        }
+
+        .profile-item .avatar-wrapper {
+            display: flex;
+            align-items: center;
+        }
+
+        /* 退出登录按钮的新样式 */
+        .logout-button {
+            background-color: #f44336;
+            /* 红色 */
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 90%;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .logout-button:hover {
+            background-color: #da190b;
+            /* 鼠标悬停时更深的红色 */
+        }
+
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            border-radius: 5px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-input {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="index.html" class="back-button"><</a>
+            <h1>我的资料</h1>
+            <div></div>
+        </div>
+        <div class="profile-section">
+            <div class="profile-item" id="avatarItem">
+                <span class="label">头像</span>
+                <div class="avatar-wrapper">
+                    <img src="" alt="User Avatar" class="avatar" id="userAvatar">
+                    <span class="arrow">></span>
+                </div>
+            </div>
+            <div class="profile-item" id="nicknameItem">
+                <span class="label">昵称</span>
+                <span class="value" id="userNickname">
+                    <span class="arrow">></span>
+                </span>
+            </div>
+            <div class="profile-item" id="genderItem">
+                <span class="label">性别</span>
+                <span class="value" id="userGender">
+                    <span class="arrow">></span>
+                </span>
+            </div>
+            <div class="profile-item" id="locationItem">
+                <span class="label">地区</span>
+                <span class="value" id="userLocation">
+                    <span class="arrow">></span>
+                </span>
+            </div>
+            <div class="profile-item" id="birthdayItem">
+                <span class="label">生日</span>
+                <span class="value" id="userBirthday">
+                    <span class="arrow">></span>
+                </span>
+            </div>
+        </div>
+        <button class="logout-button" onclick="logout()">退出登录</button>
+    </div>
+
+    <!-- 模态框 -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">×</span>
+            <h2>编辑资料</h2>
+            <input type="file" id="avatarInput" style="display: none;">
+            <input type="text" id="nicknameInput" class="modal-input" placeholder="昵称">
+            <select id="genderInput" class="modal-input">
+                <option value="">请选择性别</option>
+                <option value="男">男</option>
+                <option value="女">女</option>
+                <option value="其他">其他</option>
+            </select>
+            <input type="text" id="locationInput" class="modal-input" placeholder="地区">
+            <input type="date" id="birthdayInput" class="modal-input">
+            <button id="saveChanges">保存更改</button>
+        </div>
+    </div>
+
+    <script>
+        // (原有的 logout 和 checkAuth 函数)
+        // 退出登录
+        async function logout() {
+            try {
+                const response = await fetch('/logout', {
+                    method: 'POST',
+                });
+
+                if (response.ok) {
+                    // 清除客户端的 session 状态
+                    //  localStorage.removeItem('loggedInUser');  // 不再需要 localStorage
+                    window.location.replace("login.html"); // 重定向到登录页
+                } else {
+                    alert('退出失败');
+                }
+            } catch (error) {
+                console.error('退出登录时出错:', error);
+                alert('退出登录时出错');
+            }
+        }
+
+
+        // 首先验证登录状态. 所有的页面都需要
+        async function checkAuth() {
+            try {
+                const response = await fetch('/current-user', {
+                    method: 'GET',
+                    credentials: 'include', // 确保发送 cookies
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (response.status !== 200) {
+                    //  alert("checkAuth"+response.status)
+                    // 如果不是 200 OK，重定向到登录页面
+                    window.location.replace("login.html");
+                    return false; // 阻止后续代码执行
+                }
+                return true;
+            } catch (error) {
+                console.error('验证失败:', error);
+                window.location.replace("login.html");
+                return false;
+            }
+        }
+
+        const modal = document.getElementById('editModal');
+        const closeModalBtn = document.getElementById('closeModal');
+        const avatarInput = document.getElementById('avatarInput');
+        const nicknameInput = document.getElementById('nicknameInput');
+        const genderInput = document.getElementById('genderInput');
+        const locationInput = document.getElementById('locationInput');
+        const birthdayInput = document.getElementById('birthdayInput');
+        const saveChangesBtn = document.getElementById('saveChanges');
+
+        let currentEditingField = null; // 记录当前正在编辑的字段
+
+        // 获取并显示用户资料
+        async function fetchUserProfile() {
+            try {
+                const response = await fetch('/user-profile');
+                if (!response.ok) {
+                    throw new Error('获取用户资料失败');
+                }
+                const data = await response.json();
+                // 更新页面上的资料
+                document.getElementById('userAvatar').src = data.avatar || '🤠'; // 使用默认头像
+                document.getElementById('userNickname').innerText = data.nickname || '未设置';
+                document.getElementById('userGender').innerText = data.gender || '未设置';
+                document.getElementById('userLocation').innerText = data.location || '未设置';
+                document.getElementById('userBirthday').innerText = data.birthday || '未设置';
+
+                // 设置模态框输入框的初始值
+                nicknameInput.value = data.nickname || '';
+                genderInput.value = data.gender || '';
+                locationInput.value = data.location || '';
+                birthdayInput.value = data.birthday || '';
+
+
+            } catch (error) {
+                console.error(error);
+                alert(error.message);
+            }
+        }
+
+        // 打开模态框的通用函数
+        function openModal(field) {
+            currentEditingField = field;
+            // 根据字段显示/隐藏相应的输入框
+            avatarInput.style.display = field === 'avatar' ? 'block' : 'none';
+            nicknameInput.style.display = field === 'nickname' ? 'block' : 'none';
+            genderInput.style.display = field === 'gender' ? 'block' : 'none';
+            locationInput.style.display = field === 'location' ? 'block' : 'none';
+            birthdayInput.style.display = field === 'birthday' ? 'block' : 'none';
+
+            modal.style.display = 'block';
+        }
+
+        // 事件监听器
+        document.getElementById('avatarItem').addEventListener('click', () => {
+            //avatarInput.click(); // 直接触发文件选择
+            openModal('avatar');
+        });
+        document.getElementById('nicknameItem').addEventListener('click', () => openModal('nickname'));
+        document.getElementById('genderItem').addEventListener('click', () => openModal('gender'));
+        document.getElementById('locationItem').addEventListener('click', () => openModal('location'));
+        document.getElementById('birthdayItem').addEventListener('click', () => openModal('birthday'));
+
+        closeModalBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        // 保存更改
+        saveChangesBtn.addEventListener('click', async () => {
+            const formData = new FormData();
+
+            // 根据当前编辑的字段添加数据
+            if (currentEditingField === 'avatar' && avatarInput.files[0]) {
+                formData.append('avatar', avatarInput.files[0]);
+            }
+            if (currentEditingField === 'nickname') {
+                formData.append('nickname', nicknameInput.value);
+            }
+            if (currentEditingField === 'gender') {
+                formData.append('gender', genderInput.value);
+            }
+
+            if (currentEditingField === 'location') {
+                formData.append('location', locationInput.value);
+            }
+            if (currentEditingField === 'birthday') {
+                formData.append('birthday', birthdayInput.value);
+            }
+            try {
+                const response = await fetch('/update-profile', {
+                    method: 'POST',
+                    body: formData, // 使用 FormData
+                });
+
+                if (!response.ok) {
+                    throw new Error('更新资料失败');
+                }
+
+                alert('资料更新成功');
+                modal.style.display = 'none';
+                fetchUserProfile(); // 重新获取并显示资料
+            } catch (error) {
+                console.error(error);
+                alert(error.message);
+            }
+        });
+
+        // 页面加载时
+        window.onload = async function() {
+            if (!await checkAuth()) {
+                return;
+            }
+            fetchUserProfile(); // 获取并显示用户资料
+        };
+    </script>
+</body>
+
+</html>
